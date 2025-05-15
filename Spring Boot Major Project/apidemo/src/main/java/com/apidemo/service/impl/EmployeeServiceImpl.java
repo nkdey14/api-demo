@@ -6,6 +6,9 @@ import com.apidemo.repository.EmployeeRepository;
 import com.apidemo.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -27,6 +30,39 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(long id) {
         empRepo.deleteById(id);
+    }
+
+    @Override
+    public void updateEmpRegistration(long id, EmployeeDto employeeDto) {
+
+        Optional<Employee> optionalEmployee = empRepo.findById(id);
+
+        if(optionalEmployee.isPresent()) {
+
+            Employee employee = optionalEmployee.get();
+
+          //  employee.setId(employeeDto.getId());
+            employee.setFirstName(employeeDto.getFirstName());
+            employee.setLastName(employeeDto.getLastName());
+            employee.setDesignation(employeeDto.getDesignation());
+            employee.setGender(employeeDto.getGender());
+            employee.setEmail(employeeDto.getEmail());
+            employee.setMobile(employeeDto.getMobile());
+            employee.setCity(employeeDto.getCity());
+            employee.setSalary(employeeDto.getSalary());
+
+            // Save the updated employee
+            empRepo.save(employee);
+        }else{
+            throw new RuntimeException("Employee not found with ID: " + id);
+        }
+
+    }
+
+    @Override
+    public List<Employee> getAllEmployees() {
+        List<Employee> employees = empRepo.findAll();
+        return employees;
     }
 
     Employee convertDtoToEntity(EmployeeDto employeeDto){
