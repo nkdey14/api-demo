@@ -10,7 +10,7 @@ public interface EmployeeService {
 
     void deleteEmployee(long id);
 
-    void updateEmpRegistration(long id, EmployeeDto employeeDto);
+    EmployeeDto updateEmpRegistration(long id, EmployeeDto employeeDto);
 
-    List<Employee> getAllEmployees();
+    List<EmployeeDto> getAllEmployees();
 }

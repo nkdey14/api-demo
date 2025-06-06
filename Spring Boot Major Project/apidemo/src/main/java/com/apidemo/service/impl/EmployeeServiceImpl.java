@@ -4,10 +4,13 @@ import com.apidemo.entity.Employee;
 import com.apidemo.payload.EmployeeDto;
 import com.apidemo.repository.EmployeeRepository;
 import com.apidemo.service.EmployeeService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -19,12 +22,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.empRepo = empRepo;
     }
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public EmployeeDto createEmpRegistration(EmployeeDto employeeDto) {
 
-        Employee employee = convertDtoToEntity(employeeDto);
+        Employee employee = modelMapper.map(employeeDto, Employee.class);
         Employee savedEmployee = empRepo.save(employee);
-        return convertEntityToDto(savedEmployee);
+        return modelMapper.map(savedEmployee, EmployeeDto.class);
     }
 
     @Override
@@ -33,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void updateEmpRegistration(long id, EmployeeDto employeeDto) {
+    public EmployeeDto updateEmpRegistration(long id, EmployeeDto employeeDto) {
 
         Optional<Employee> optionalEmployee = empRepo.findById(id);
 
@@ -52,7 +58,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setSalary(employeeDto.getSalary());
 
             // Save the updated employee
-            empRepo.save(employee);
+            Employee savedEmpData = empRepo.save(employee);
+
+            return modelMapper.map(savedEmpData, EmployeeDto.class);
         }else{
             throw new RuntimeException("Employee not found with ID: " + id);
         }
@@ -60,41 +68,41 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> getAllEmployees() {
+    public List<EmployeeDto> getAllEmployees() {
         List<Employee> employees = empRepo.findAll();
-        return employees;
+        return employees.stream().map(e -> convertEntityToDto(e)).collect(Collectors.toList());
     }
 
     Employee convertDtoToEntity(EmployeeDto employeeDto){
 
-        Employee employee = new Employee();
+//        Employee employee = new Employee();
+//
+//        employee.setFirstName(employeeDto.getFirstName());
+//        employee.setLastName(employeeDto.getLastName());
+//        employee.setDesignation(employeeDto.getDesignation());
+//        employee.setGender(employeeDto.getGender());
+//        employee.setEmail(employeeDto.getEmail());
+//        employee.setMobile(employeeDto.getMobile());
+//        employee.setCity(employeeDto.getCity());
+//        employee.setSalary(employeeDto.getSalary());
 
-        employee.setFirstName(employeeDto.getFirstName());
-        employee.setLastName(employeeDto.getLastName());
-        employee.setDesignation(employeeDto.getDesignation());
-        employee.setGender(employeeDto.getGender());
-        employee.setEmail(employeeDto.getEmail());
-        employee.setMobile(employeeDto.getMobile());
-        employee.setCity(employeeDto.getCity());
-        employee.setSalary(employeeDto.getSalary());
-
-        return employee;
+        return modelMapper.map(employeeDto, Employee.class);
     }
 
     EmployeeDto convertEntityToDto(Employee employee){
 
-        EmployeeDto employeeDto = new EmployeeDto();
+//        EmployeeDto employeeDto = new EmployeeDto();
+//
+//        employeeDto.setId(employee.getId());
+//        employeeDto.setFirstName(employee.getFirstName());
+//        employeeDto.setLastName(employee.getLastName());
+//        employeeDto.setDesignation(employee.getDesignation());
+//        employeeDto.setGender(employee.getGender());
+//        employeeDto.setEmail(employee.getEmail());
+//        employeeDto.setMobile(employee.getMobile());
+//        employeeDto.setCity(employee.getCity());
+//        employeeDto.setSalary(employee.getSalary());
 
-        employeeDto.setId(employee.getId());
-        employeeDto.setFirstName(employee.getFirstName());
-        employeeDto.setLastName(employee.getLastName());
-        employeeDto.setDesignation(employee.getDesignation());
-        employeeDto.setGender(employee.getGender());
-        employeeDto.setEmail(employee.getEmail());
-        employeeDto.setMobile(employee.getMobile());
-        employeeDto.setCity(employee.getCity());
-        employeeDto.setSalary(employee.getSalary());
-
-        return employeeDto;
+        return modelMapper.map(employee, EmployeeDto.class);
     }
 }
