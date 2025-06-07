@@ -2,12 +2,14 @@ package com.apidemo.controller;
 
 import com.apidemo.payload.EmployeeDto;
 import com.apidemo.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,8 +38,11 @@ public class EmployeeRestController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<?> registerEmployee(@RequestBody EmployeeDto employeeDto) {
+    @PostMapping("/registerEmployee")
+    public ResponseEntity<?> registerEmployee(@Valid @RequestBody EmployeeDto employeeDto, BindingResult result) {
+        if(result.hasErrors()) {
+            return new ResponseEntity<>(result.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        }
         EmployeeDto empDto = empService.createEmpRegistration(employeeDto);
         return new ResponseEntity<>(empDto, HttpStatus.CREATED);
     }

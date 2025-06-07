@@ -1,6 +1,7 @@
 package com.apidemo.payload;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
@@ -12,20 +13,34 @@ public class EmployeeDto {
 
     private long id;
 
+    @NotBlank(message = "First Name is required")
+    @Size(min = 2, message = "First Name must be minimum of 2 characters")
     private String firstName;
 
+    @NotBlank(message = "Last Name is required")
+    @Size(min = 2, message = "Last Name must be minimum of 2 characters")
     private String lastName;
 
+    @NotEmpty(message = "Designation is required")
     private String designation;
 
+    @NotEmpty(message = "Gender is required")
     private String gender;
 
+    @Email(message = "Invalid Email ID")
+    @NotEmpty(message = "Email is required")
     private String email;
 
-    private long mobile;
+    @NotNull(message = "Mobile number is required")
+    @Digits(integer = 10, fraction = 0, message = "Mobile number must be exactly 10 digits")
+    @Min(value = 1000000000L, message = "Mobile number must be 10 digits")
+    @Max(value = 9999999999L, message = "Mobile number must be 10 digits")
+    private Long mobile;
 
+    @NotEmpty(message = "City is required")
     private String city;
 
+    @Positive(message = "Salary must be positive")
     private double salary;
 
     public long getId() {
