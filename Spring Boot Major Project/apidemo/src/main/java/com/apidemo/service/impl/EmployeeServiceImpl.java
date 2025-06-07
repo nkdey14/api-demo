@@ -7,6 +7,10 @@ import com.apidemo.repository.EmployeeRepository;
 import com.apidemo.service.EmployeeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,8 +73,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDto> getAllEmployees() {
-        List<Employee> employees = empRepo.findAll();
+    public List<EmployeeDto> getAllEmployees(int pageNo, int pageSize, String sortBy) {
+
+        // Create a Pageable object with sorting
+       Pageable pageable = PageRequest.of(
+                pageNo,
+                pageSize,
+                Sort.by(sortBy).ascending()
+        );
+        Page<Employee> all = empRepo.findAll(pageable);
+        List<Employee> employees = all.getContent();
         return employees.stream().map(e -> convertEntityToDto(e)).collect(Collectors.toList());
     }
 

@@ -2,6 +2,10 @@ package com.apidemo.controller;
 
 import com.apidemo.payload.EmployeeDto;
 import com.apidemo.service.EmployeeService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +23,15 @@ public class EmployeeRestController {
         this.empService = empService;
     }
 
-    //http://localhost:8081/api/v1/empreg
+    //http://localhost:8081/api/v1/empreg/employees?pageNo=0&pageSize=3
 
-    @GetMapping
-    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
-        List<EmployeeDto> dto = empService.getAllEmployees();
+    @GetMapping("/employees")
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees(
+           @RequestParam(required = false, defaultValue = "0") int pageNo,
+           @RequestParam(required = false, defaultValue = "3") int pageSize,
+           @RequestParam(required = false, defaultValue = "salary") String sortBy
+    ) {
+        List<EmployeeDto> dto = empService.getAllEmployees(pageNo, pageSize, sortBy);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

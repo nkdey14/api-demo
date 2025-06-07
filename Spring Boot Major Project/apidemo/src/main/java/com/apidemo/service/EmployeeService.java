@@ -1,6 +1,5 @@
 package com.apidemo.service;
 
-import com.apidemo.entity.Employee;
 import com.apidemo.payload.EmployeeDto;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public interface EmployeeService {
 
     EmployeeDto updateEmpRegistration(long id, EmployeeDto employeeDto);
 
-    List<EmployeeDto> getAllEmployees();
+    List<EmployeeDto> getAllEmployees(int pageNo, int pageSize, String sortBy);
 
     EmployeeDto getEmpById(Long id);
 }
