@@ -47,4 +47,11 @@ public class EmployeeRestController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    //http://localhost:8081/api/v1/empreg/byId?id=2
+    @GetMapping("/byId")
+    public ResponseEntity<EmployeeDto> getEmployeeDetails(@RequestParam Long id){
+        EmployeeDto dto = empService.getEmpById(id);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.apidemo.service.impl;
 
 import com.apidemo.entity.Employee;
+import com.apidemo.exception.ResourceNotFoundException;
 import com.apidemo.payload.EmployeeDto;
 import com.apidemo.repository.EmployeeRepository;
 import com.apidemo.service.EmployeeService;
@@ -71,6 +72,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<EmployeeDto> getAllEmployees() {
         List<Employee> employees = empRepo.findAll();
         return employees.stream().map(e -> convertEntityToDto(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    public EmployeeDto getEmpById(Long id) {
+        Employee employee = empRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Employee not found with ID: " + id)
+        );
+        return modelMapper.map(employee, EmployeeDto.class);
     }
 
     Employee convertDtoToEntity(EmployeeDto employeeDto){
