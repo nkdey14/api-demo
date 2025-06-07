@@ -29,9 +29,10 @@ public class EmployeeRestController {
     public ResponseEntity<List<EmployeeDto>> getAllEmployees(
            @RequestParam(required = false, defaultValue = "0") int pageNo,
            @RequestParam(required = false, defaultValue = "3") int pageSize,
-           @RequestParam(required = false, defaultValue = "salary") String sortBy
+           @RequestParam(required = false, defaultValue = "salary") String sortBy,
+           @RequestParam(required = false, defaultValue = "asc") String sortDir
     ) {
-        List<EmployeeDto> dto = empService.getAllEmployees(pageNo, pageSize, sortBy);
+        List<EmployeeDto> dto = empService.getAllEmployees(pageNo, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

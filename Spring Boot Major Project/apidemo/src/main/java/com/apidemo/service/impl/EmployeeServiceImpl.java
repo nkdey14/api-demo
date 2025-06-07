@@ -72,15 +72,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    // http://localhost:8081/api/v1/empreg/employees?pageNo=0&pageSize=4&sortBy=lastName&sortDir=asc
+
     @Override
-    public List<EmployeeDto> getAllEmployees(int pageNo, int pageSize, String sortBy) {
+    public List<EmployeeDto> getAllEmployees(int pageNo, int pageSize, String sortBy, String sortDir) {
+
+        // Create a Sort object based on sortDir
+        Sort sort = sortDir.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
 
         // Create a Pageable object with sorting
-       Pageable pageable = PageRequest.of(
-                pageNo,
-                pageSize,
-                Sort.by(sortBy).ascending()
-        );
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Employee> all = empRepo.findAll(pageable);
         List<Employee> employees = all.getContent();
         return employees.stream().map(e -> convertEntityToDto(e)).collect(Collectors.toList());
@@ -127,3 +130,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         return modelMapper.map(employee, EmployeeDto.class);
     }
 }
+
